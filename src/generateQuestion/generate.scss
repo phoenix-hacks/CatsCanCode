@@ -1,0 +1,123 @@
+#generate-container {
+  color: white;
+  width: 100vw;
+  height: 100vh;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  gap:16px;
+  #generate-title {
+    font-size:2rem;
+    font-weight: 500;
+  }
+  #generate-params{
+    width: 100vw;
+    height: 50vh;
+    // background-color: red;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    #study-material{
+        background-color: #111111;
+        border: 1px solid #70707040;
+        box-sizing: border-box;
+        flex-wrap: wrap;
+        width:20vw;
+        height:10vh;
+        text-align: center;
+        color:grey;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        padding: 16px;
+        
+        border-radius: 8px;
+    }
+    #input-area {
+        background-color: #111111;
+        border: 1px solid #70707040;
+        box-sizing: border-box;
+        padding: 16px;
+        width:20vw;
+        border-radius: 8px;
+      }
+    #question-format{
+        display: flex;
+        gap:1vw;
+        #q-number{
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            #input-area-short{
+                background-color: #111111;
+                border: 1px solid #70707040;
+                box-sizing: border-box;
+                padding: 16px;
+                width:6vw;
+                // padding-inline: px;
+                border-radius: 8px;
+            }
+        }
+    }
+    #difficulty-meter{
+        display: flex;
+        gap:1vw;
+        #q-diff{
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            #input-area-short{
+                background-color: #111111;
+                border: 1px solid #70707040;
+                box-sizing: border-box;
+                padding: 16px;
+                width:6vw;
+                // padding-inline: px;
+                border-radius: 8px;
+            }
+        }
+    }
+  }
+  #generate-submit{
+      padding: 16px;
+      padding-inline: 8vw;
+      border-radius: 4vw;
+      border: 1px solid #92e4f8;
+      color: #92e4f8;
+      transition: 0.28s ease-in-out;
+      &:hover{
+        background-color: #92e4f8;
+        color:black;
+      }
+  }
+}
+
+@media screen  and (max-width:1100px){
+#generate-container{
+    gap:24px;
+    #generate-params{
+        #input-area{
+            padding-right:14vw;
+        }
+        #question-format{
+            #q-number{
+                #input-area-short{
+                    width:20vw;
+                }
+            }
+        }
+        #difficulty-meter{
+            #q-diff{
+                #input-area-short{
+                    width:20vw;
+                }
+            }
+        }
+    }
+}
+}

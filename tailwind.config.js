@@ -8,11 +8,12 @@ export default {
       },
       colors: {
         bgBlack: "#0D0D0D",
-        subText: "#605B5B",
+        subText: "#989191FF",
         stroke: "#707070",
         lightWhite: "#FCFCFC",
         blackishGray: "#111111",
         accent: "#92E4F8",
+        cardBg: "#161616",
       },
     },
   },
