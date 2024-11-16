@@ -12,6 +12,7 @@ import Signin from "./signinPage/signin.jsx";
 import Generate from "./generateQuestion/Generate.jsx";
 import Quiz from "./pages/quiz/Quiz.jsx";
 import GeneratedPaper from "./generatedQuestionPaper/generatedPaper.jsx";
+import Track from "./pages/track/Track.jsx";
 
 
 
@@ -34,6 +35,9 @@ const router = createBrowserRouter([
   {
     path: "/generatedpaper", element: <GeneratedPaper />
   },
+  {
+    path: "/track/:id", element: <Track />
+  }
 ]);
 
 createRoot(document.getElementById("root")).render(

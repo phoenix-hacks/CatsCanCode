@@ -1,9 +1,12 @@
 import "./generate.scss";
 import { motion } from "framer-motion";
 import { useState } from "react";
+import { useNavigate } from "react-router-dom";
 import { useDropzone } from "react-dropzone";
+import axios from "axios";
 
 export default function Generate() {
+  const [isFetching, setFetching] = useState(false);
   const [params, setParams] = useState({
     subject: null,
     topic: null,
@@ -16,9 +19,25 @@ export default function Generate() {
     hard: 0,
     formData: null,
   });
-  
-  const handlegenerate=()=>{
-    console.log(params);
+  const navigate = useNavigate();
+  const handlegenerate = () => {
+    // console.log(params);
+    setFetching(true);
+    const gettingequetion = async () => {
+      const p = await axios.post("http://localhost:3000/generate/withoutPdf", {
+        subject: params.subject,
+        topic: params.topic,
+        grade: params.grade,
+        questionLevels: [params.easy, params.medium, params.hard]
+      })
+      if (p?.data) {
+        setFetching(false);
+        localStorage.setItem("myData", p.data);
+        // console.log(p.data.res);
+        navigate("/generatedPaper", { state: JSON.stringify(p.data.res) });
+      }
+    }
+    gettingequetion();
   }
 
   const [file, setFile] = useState(null);
@@ -33,7 +52,7 @@ export default function Generate() {
       setParams((prev) => ({ ...prev, formData }));
 
       console.log("File upload complete!");
-      
+
     } else {
       alert("Please upload a valid PDF file.");
     }
@@ -72,29 +91,25 @@ export default function Generate() {
           }}
           animate={{ opacity: 1 }}
         >
-            <div id="study-material">
-
-
-
-
+          <div id="study-material">
             <div
               {...getRootProps()}
+              className="cursor-pointer size-full"
               id="dropzone"
             >
               <input {...getInputProps()} />
               {file ? (
                 <p>{file.name}</p>
               ) : (
-                <p>Drag & drop a PDF file here, or click to select one.</p>
+                <div className="flex flex-col">
+                  Drag & drop a PDF
+                  <span className="text-white/20">or click to select</span>
+                </div>
               )}
             </div>
-
-
-
-
-            </div>
+          </div>
           <input
-            type="text" 
+            type="text"
             placeholder="Enter Subject"    //SUBJECT
             id="input-area"
             onChange={(e) => setParams({ ...params, subject: e.target.value })}
@@ -106,72 +121,39 @@ export default function Generate() {
             onChange={(e) => setParams({ ...params, topic: e.target.value })}
           />
           <input
-            type="text" 
+            type="text"
             placeholder="Enter Grade"   //GRADE
             id="input-area"
             onChange={(e) => setParams({ ...params, grade: e.target.value })}
           />
 
-
-          <div id="question-format">    
-            <div id="q-number">
-            <input
-              type="number"
-              placeholder="0"            //QUESTIONS FORMAT - MCQ
-              id="input-area-short"
-              onChange={(e) => setParams({ ...params, mcq: e.target.value })}
-            />
-            <span>Mcq</span>
-            </div>
-            <div id="q-number">
-            <input
-              type="number"
-              placeholder="0"            //QUESTIONS FORMAT - SHORT
-              id="input-area-short"
-              onChange={(e) => setParams({ ...params, short: e.target.value })}
-            />
-            <span>Short</span>
-            </div>
-            <div id="q-number">
-            <input
-              type="number"
-              placeholder="0"            //QUESTIONS FORMAT - LONG
-              id="input-area-short"
-              onChange={(e) => setParams({ ...params, long: e.target.value })}
-            />
-            <span>Long</span>
-            </div>
-          </div>
-
-
-
           <div id="difficulty-meter">
-          <div id="q-diff">
-            <input
-              type="number"
-              placeholder="0"            //QUESTIONS NUMBER - EASY
-              id="input-area-short"
-              onChange={(e) => setParams({ ...params, easy: e.target.value })}
-            />
-            <span>Easy</span>
+            <div id="q-diff">
+              <input
+                type="number"
+                placeholder="0"            //QUESTIONS NUMBER - EASY
+                id="input-area-short"
+                onChange={(e) => setParams({ ...params, easy: e.target.value })}
+              />
+              <span className="w-full text-white/40">Easy</span>
             </div>
             <div id="q-diff">
-            <input
-              type="number"
-              placeholder="0"            //QUESTIONS NUMBER - MEDIUM
-              id="input-area-short"
-              onChange={(e) => setParams({ ...params, medium: e.target.value })}
-            />
-            <span>Medium</span>
+              <input
+                type="number"
+                placeholder="0"            //QUESTIONS NUMBER - MEDIUM
+                id="input-area-short"
+                onChange={(e) => setParams({ ...params, medium: e.target.value })}
+              />
+              <span className="w-full text-white/40">Medium</span>
             </div>
             <div id="q-diff">
-            <input
-              type="number"
-              placeholder="0"            //QUESTIONS NUMBER - HARD
-              id="input-area-short"
-              onChange={(e) => setParams({ ...params, hard: e.target.value })}
-            />
-            <span>Hard</span>
+              <input
+                type="number"
+                placeholder="0"            //QUESTIONS NUMBER - HARD
+                id="input-area-short"
+                onChange={(e) => setParams({ ...params, hard: e.target.value })}
+              />
+              <span className="w-full text-white/40">Hard</span>
             </div>
           </div>
         </motion.div>
@@ -185,9 +167,9 @@ export default function Generate() {
             ease: "easeInOut",
           }}
           animate={{ scale: 1, opacity: 1 }}
-          onClick={()=>handlegenerate()}
+          onClick={() => handlegenerate()}
         >
-          Generate
+          {isFetching ? "Generating..." : "Generate"}
         </motion.div>
       </div>
     </>

@@ -77,6 +77,7 @@ const Name = ({setName}) => {
 
 const QuizPage = ({name}) => {
   const [selected, setSelected] = useState(-1);
+  const [question, setQuestion] = useState(0);
 
   return (
     <>
@@ -124,7 +125,7 @@ const QuizPage = ({name}) => {
                   <div className="h-[60vh]  relative flex pr-2 flex-col gap-2 overflow-y-scroll overflow-x-hidden pb-[12vh]">
                     {questions.map((q, index) => {
                       return (
-                        <Question index={index} key={q}>
+                        <Question index={index} onClick={() => setQuestion(index)} selected={question==index} key={q}>
                           {q}
                         </Question>
                       );
@@ -155,10 +156,10 @@ const ActionButton = ({ children }) => {
   );
 };
 
-const Question = ({ children, index }) => {
+const Question = ({ children, index, selected, onClick }) => {
   return (
     <>
-      <button className="w-full relative items-center gap-2 flex text-left p-2 text-md  bg-cardBg border-2 border-transparent hover:border-accent hover:text-accent  rounded-lg">
+      <button onClick={onClick} className={`w-full relative items-center gap-2 flex text-left p-2 text-md  font-medium  ${selected ? "bg-accent text-black " : "bg-cardBg  hover:border-accent hover:text-accent "} border-2 border-transparent rounded-lg`}>
         <div className="h-full p-2">{index + 1}</div>
         <div className="m-2 relative">{children}</div>
         {/* <div className="absolute top-0 right-0 h-full w-24 bg-gradient-to-l from-bgBlack/50 to-transparent"></div> */}

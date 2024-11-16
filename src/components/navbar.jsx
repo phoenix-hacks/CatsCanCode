@@ -1,13 +1,14 @@
 "use client";
-
+import { motion } from "framer-motion";
 import { useState } from "react";
 import { Dialog, DialogPanel, PopoverGroup } from "@headlessui/react";
 import { Bars3Icon, XMarkIcon } from "@heroicons/react/24/outline";
 
 import { Link } from "react-router-dom";
 
-export default function Navbar({ changecurr }) {
+export default function Navbar({ changecurr,curr }) {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+  const [currnav,setCurrnav]=useState(null);
 
   return (
     <>
@@ -19,12 +20,13 @@ export default function Navbar({ changecurr }) {
           <div className="flex lg:flex-1">
             <a href="#" className="-m-1.5 p-1.5">
               <span className="sr-only">Your Company</span>
-              <img
+              <div className="text-lightWhite text-xl font-medium" onClick={() => {changecurr(1)}}>Forge.ai</div>
+              {/* <img
                 alt=""
                 src="https://tailwindui.com/plus/img/logos/mark.svg?color=indigo&shade=600"
                 className="h-8 w-auto"
-                onClick={() => changecurr(1)}
-              />
+                onClick={() => {changecurr(1)}}
+              /> */}
             </a>
           </div>
           <div className="flex lg:hidden">
@@ -37,7 +39,7 @@ export default function Navbar({ changecurr }) {
               <Bars3Icon aria-hidden="true" className="size-6" />
             </button>
           </div>
-          <div className="border-stroke border-opacity-25 border-[0.1rem] px-6 py-2 group rounded-[6rem] bg-blackishGray ">
+          <div className={`border-stroke border-opacity-25 border-[0.1rem] px-6 py-2 group rounded-[6rem] bg-blackishGray`} >
             <PopoverGroup className="hidden lg:flex lg:gap-x-12">
               <NavbarItem onClick={() => changecurr(2)} >Features</NavbarItem>
               <NavbarItem
@@ -60,7 +62,7 @@ export default function Navbar({ changecurr }) {
               to="#"
               className="text-sm/6 font-semibold text-lightWhite text-opacity-80 border-stroke border-opacity-25 rounded-3xl px-3 py-2 border-[0.1rem]"
             >
-              Generate
+              Sign In
             </Link>
           </div>
         </nav>
