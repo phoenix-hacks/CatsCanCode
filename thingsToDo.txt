@@ -1,0 +1,15 @@
+QpGen/quiz
+
+
+1) landing -done by 3pm
+2) sign in page - by 4
+3) create (template input as well)- 9
+4) qpaper reveal -by 12
+5) quiz page
+
+
+Innovation
+Social Impact
+Functionality and Feasibility
+Team Collaboration
+UI/UX

@@ -1,0 +1,17 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@font-face {
+  font-family: "Neue Regrade";
+  src: url("/public/regrade.ttf");
+}
+
+#root,
+html,
+body {
+  height: 100%;
+  font-family: "Neue Regrade", sans-serif;
+  background-color: #0d0d0d;
+  overflow: hidden;
+}
