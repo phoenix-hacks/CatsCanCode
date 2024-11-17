@@ -1,5 +1,8 @@
-import React, { useEffect, useState } from "react";
+import axios from "axios";
+import React, { useEffect, useLayoutEffect, useMemo, useState } from "react";
 import { useFullScreenHandle } from "react-full-screen";
+import { useParams } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 
 const options = [
   "A process is a program; a thread is a part of it.",
@@ -46,12 +49,58 @@ const close = (
 );
 
 const Quiz = () => {
+  const { id } = useParams();
+  const [details, setDetails] = useState(null);
+  const [submitted, setSubmitted] = useState(false);
+  const [score, setFinalScore] = useState(null);
+
+  useEffect(() => {
+    async function getData() {
+      const data = await axios.post("http://localhost:3000/quiz/get", { id });
+
+      setDetails({
+        title: data.data.data.title,
+        data: JSON.parse(data.data.data.data),
+      });
+      return data;
+    }
+    if (id) {
+      const data = getData();
+    }
+  }, [id]);
+
+  useEffect(() => {
+    console.log(details);
+  }, [details]);
   const [name, setName] = useState(null);
 
-  return <>{name ? <QuizPage name={name} /> : <Name setName={setName} />}</>;
+  return (
+    <>
+      {name ? (
+        <>
+          {submitted == false ? (
+            <>
+              
+              <QuizPage
+                setFinalScore={setFinalScore}
+                setSubmitted={setSubmitted}
+                id={id}
+                details={details}
+                name={name}
+              />
+            </>
+          ) : (
+            <div className="size-full bg-bgBlack items-center justify-center text-white flex text-4xl">You scored {score}</div>
+          )}
+        </>
+      ) : (
+        <Name setName={setName} />
+      )}
+    </>
+  );
 };
 
-const Name = ({setName}) => {
+const Name = ({ setName }) => {
   return (
     <>
       <div className="size-full flex flex-col gap-2 bg-bgBlack items-center justify-center text-white">
@@ -59,41 +108,82 @@ const Name = ({setName}) => {
           <div className="text-2xl">What should we call you?</div>
           <input
             onKeyDown={(e) => {
-                if(e.keyCode == 13){
-                    document.documentElement.requestFullscreen()
-                    setName(e.target.value)
-                }
+              if (e.keyCode == 13) {
+                document.documentElement.requestFullscreen();
+                setName(e.target.value);
+              }
             }}
             placeholder="Your name here"
             className="outline-none text-2xl p-4 border-2 border-stroke/25 bg-transparent rounded-lg"
             type="text"
           />
-          <div className="text-white/40 w-full text-right">Enter to start test</div>
+          <div className="text-white/40 w-full text-right">
+            Enter to start test
+          </div>
         </div>
       </div>
     </>
   );
 };
 
-const QuizPage = ({name}) => {
+const QuizPage = ({ setSubmitted, setFinalScore, name, details, id }) => {
   const [selected, setSelected] = useState(-1);
   const [question, setQuestion] = useState(0);
+  const [answered, setAnswered] = useState(
+    Array(details.data.questions.length).fill(-1)
+  );
+  const [score, setScore] = useState(0);
 
+  useEffect(() => {
+    setSelected(answered[question]);
+  }, [question]);
+
+  useLayoutEffect(() => {
+    if (selected != -1) {
+      setAnswered((prev) => prev.map((a, i) => (i == question ? selected : a)));
+      console.log(answered);
+    }
+  }, [selected]);
+
+  function handleSelect(index) {
+    setAnswered((prev) => prev.map((a, i) => (i == question ? index : a)));
+    setSelected(index);
+  }
+
+  async function handleSubmit() {
+    const currScore = answered.filter((a, index) => {
+      console.log(a, details.data.questions[index].correctAns.opno - 1);
+      return a == details.data.questions[index].correctAns.opno - 1;
+    }).length;
+    setScore(currScore);
+    console.log(currScore);
+    await axios.post("http://localhost:3000/quiz/addSubmission", {
+      id: id,
+      name: name,
+      errors: 5,
+      score: currScore,
+    });
+
+    setSubmitted(true);
+    setFinalScore(currScore);
+  }
+  const navigate = useNavigate();
   return (
     <>
       <section className="w-full h-screen flex flex-col p-4 text-white">
         <div className="flex ">
-            <div className="absolute bottom-0 left-0 m-4" >You're doing great {name}, keep going!</div>
+          <div className="absolute bottom-0 left-0 m-4">
+            You're doing great {name}, keep going!
+          </div>
           <div className="h-[10vh] flex flex-col">
-            <h1 className="text-4xl font-medium">
-              Operating Systems Viva 2024
-            </h1>
-            <h2 className="text-white/50 text-xl mt-1">
-              Ram Gopal, Jul 27, 2024
-            </h2>
+            <h1 className="text-4xl font-medium">{details.title}</h1>
+            <h2 className="text-white/50 text-xl mt-1">17 Nov, 2024</h2>
           </div>
           <div className="ml-auto h-full flex items-center justify-center">
-            <button className="size-full hover:border-red-950 hover:bg-red-800/20 hover:text-red-600 rounded-lg px-12 border-2 border-stroke/25 flex items-center justify-center gap-2 font-bold">
+            <button
+              onClick={() => navigate("/")}
+              className="size-full hover:border-red-950 hover:bg-red-800/20 hover:text-red-600 rounded-lg px-12 border-2 border-stroke/25 flex items-center justify-center gap-2 font-bold"
+            >
               Exit
             </button>
           </div>
@@ -101,16 +191,16 @@ const QuizPage = ({name}) => {
         <div className="flex gap-4  size-full">
           <div className="size-full flex flex-col mt-8 gap-4">
             <div className="text-4xl">
-              1. What is the difference between a process and a thread?{" "}
+              {question + 1}. {details.data.questions[question].text}
             </div>
-            {options.map((i, index) => (
+            {details.data.questions[question].options.map((o, index) => (
               <Option
-                key={i}
+                key={o.text}
                 selected={index === selected}
-                onClick={() => setSelected(index)}
+                onClick={() => handleSelect(index)}
                 index={index}
               >
-                {i}
+                {o.text}
               </Option>
             ))}
             <div className="flex flex-col gap-4"></div>
@@ -123,10 +213,16 @@ const QuizPage = ({name}) => {
                 <div className="flex flex-col size-full overflow-hidden">
                   <div className="absolute bottom-0 h-[10vh] w-full bg-gradient-to-b  z-30    from-transparent to-bgBlack pointer-events-none"></div>
                   <div className="h-[60vh]  relative flex pr-2 flex-col gap-2 overflow-y-scroll overflow-x-hidden pb-[12vh]">
-                    {questions.map((q, index) => {
+                    {details.data.questions.map((q, index) => {
                       return (
-                        <Question index={index} onClick={() => setQuestion(index)} selected={question==index} key={q}>
-                          {q}
+                        <Question
+                          index={index}
+                          onClick={() => setQuestion(index)}
+                          selected={question == index}
+                          answered={answered[index] != -1}
+                          key={q.text}
+                        >
+                          {q.text}
                         </Question>
                       );
                     })}
@@ -136,10 +232,22 @@ const QuizPage = ({name}) => {
             </div>
             <div className="flex mt-4 size-full flex-col gap-2">
               <div className="h-full w-full flex gap-2">
-                <ActionButton>Back</ActionButton>
-                <ActionButton>Next</ActionButton>
+                <ActionButton
+                  onClick={() => setQuestion((prev) => Math.max(prev - 1, 0))}
+                >
+                  Back
+                </ActionButton>
+                <ActionButton
+                  onClick={() =>
+                    setQuestion(
+                      (prev) => (prev + 1) % details.data.questions.length
+                    )
+                  }
+                >
+                  Next
+                </ActionButton>
               </div>
-              <ActionButton>Submit</ActionButton>
+              <ActionButton onClick={handleSubmit}>Submit</ActionButton>
             </div>
           </div>
         </div>
@@ -148,18 +256,30 @@ const QuizPage = ({name}) => {
   );
 };
 
-const ActionButton = ({ children }) => {
+const ActionButton = ({ children, ...others }) => {
   return (
-    <button className="w-full h-full p-4 rounded-lg bg-accent/0 border-2 hover:bg-accent hover:text-black border-accent text-white font-bold">
+    <button
+      {...others}
+      className="w-full h-full p-4 rounded-lg bg-accent/0 border-2 hover:bg-accent hover:text-black border-accent text-white font-bold"
+    >
       {children}
     </button>
   );
 };
 
-const Question = ({ children, index, selected, onClick }) => {
+const Question = ({ children, index, selected, onClick, answered }) => {
   return (
     <>
-      <button onClick={onClick} className={`w-full relative items-center gap-2 flex text-left p-2 text-md  font-medium  ${selected ? "bg-accent text-black " : "bg-cardBg  hover:border-accent hover:text-accent "} border-2 border-transparent rounded-lg`}>
+      <button
+        onClick={onClick}
+        className={`w-full relative items-center gap-2 flex text-left p-2 text-md  font-medium  ${
+          selected
+            ? "bg-accent text-black "
+            : answered
+            ? "text-black bg-green-400"
+            : "bg-cardBg  hover:border-accent hover:text-accent "
+        } border-2 border-transparent rounded-lg`}
+      >
         <div className="h-full p-2">{index + 1}</div>
         <div className="m-2 relative">{children}</div>
         {/* <div className="absolute top-0 right-0 h-full w-24 bg-gradient-to-l from-bgBlack/50 to-transparent"></div> */}

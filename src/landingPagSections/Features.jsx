@@ -14,21 +14,13 @@ export default function Features() {
     <div className='min-h-screen'>
       <div className=' w-auto flex flex-col items-center justify-center'>
         <div className='flex flex-col items-center justify-center'>
-          <motion.p 
+          {/* <motion.p 
           initial={{y:-20,opacity:0}}
           transition={{type:"tween",ease:"easeInOut",delay:0.5,duration:0.28}}
           animate={{y:0,opacity:1}}
           className='text-accent text-[2rem] font-medium'>
             Features
-          </motion.p>
-
-          <motion.p 
-                    initial={{y:-20,opacity:0}}
-                    transition={{type:"tween",ease:"easeInOut",delay:0.8,duration:0.38}}
-                    animate={{y:0,opacity:1}}
-          className='max-w-[40vw] bg-clip-text text-transparent bg-gradient-to-r mt-6 text-2xl from-white/20 to-white font-semibold text-center'>
-            Transforming education with tools that save time, ensure quality, and enable seamless quiz sharing.
-          </motion.p>
+          </motion.p> */}
 
         </div>
         <motion.div
@@ -43,6 +35,14 @@ export default function Features() {
           <Card icon="/public/pencil.svg" title="Customization and Export Options" description="Fine-tune questions, set time limits, and format papers or quizzes as needed." />
           <Card icon="/public/link.svg" title="Shareable Quizzes via Link" description="Create interactive quizzes and share them effortlessly using a unique link." />
         </motion.div>
+
+          <motion.p 
+                    initial={{y:-20,opacity:0}}
+                    transition={{type:"tween",ease:"easeInOut",delay:0.8,duration:0.38}}
+                    animate={{y:0,opacity:1}}
+          className='max-w-[40vw] mt-16 bg-clip-text text-transparent bg-gradient-to-r  text-2xl from-white/20 to-white font-semibold text-center'>
+            Transforming education with tools that save time, ensure quality, and enable seamless quiz sharing.
+          </motion.p>
       </div>
     </div>
   )

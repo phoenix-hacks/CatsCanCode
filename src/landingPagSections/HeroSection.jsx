@@ -21,15 +21,15 @@ export default function HeroSection() {
                     transition={{type:"tween",delay:0.3,duration:0.38,ease:"circOut"}}
                     animate={{y:0,opacity:1}}
           className='text-subText max-w-[30rem] text-center mt-6 text-lg'>Empowering educators and learners with AI-driven tools for effortless question paper generation, customizable quizzes, and seamless sharing for enhanced engagement.</motion.div>
-          <div className='mt-16 relative  overflow-hidden rounded-full'>
+          <div className='mt-16 relative   rounded-full'>
             {/* <input placeholder='Enter Email' type='email' className='rounded-full overflow-hidden bg-transparent outline-none w-full text-white border-stroke/25 border-2 p-4' /> */}
             <div className='relative right-0 overflow-visible flex items-center justify-center p-3 h-full w-fit  top-0'>
               <motion.button 
-                        initial={{y:200,paddingInline:"25px"}}
-                        whileHover={{paddingInline:"50px"}}
-                        transition={{type:"tween",delay:0.6,duration:0.8,ease:"circInOut",paddingInline:{delay:0}}}
+                        initial={{y:200,paddingInline:"25px", paddingBlock: "10px"}}
+                        whileHover={{paddingInline:"40px", paddingBlock: "15px"}}
+                        transition={{type:"tween",delay:0.6,duration:0.8,ease:"circInOut",paddingInline:{delay:0}, paddingBlock: {delay: 0}}}
                         animate={{y:0}}
-              className=' bg-accent h-full  py-3 rounded-full [box-shadow:0px_0px_15px_#92E4F8] relative font-medium text-2xl hover:px-28 ' onClick={()=>navigate("/signin")}>Get Started</motion.button>
+              className=' bg-accent h-full rounded-full [box-shadow:0px_0px_15px_#92E4F8] relative font-medium text-lg hover:px-28 ' onClick={()=>navigate("/signin")}>Get Started</motion.button>
             </div>
           </div>
         </div>

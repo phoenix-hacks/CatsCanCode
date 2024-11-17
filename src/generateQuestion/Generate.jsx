@@ -7,6 +7,7 @@ import axios from "axios";
 
 export default function Generate() {
   const [isFetching, setFetching] = useState(false);
+  const [id, setId] = useState(null);
   const [params, setParams] = useState({
     subject: null,
     topic: null,
@@ -31,10 +32,13 @@ export default function Generate() {
         questionLevels: [params.easy, params.medium, params.hard]
       })
       if (p?.data) {
+        // navigate("/quiz/" + p.data.id);
+        // setId(p.data.id)
+
         setFetching(false);
         localStorage.setItem("myData", p.data);
         // console.log(p.data.res);
-        navigate("/generatedPaper", { state: JSON.stringify(p.data.res) });
+        navigate("/generatedPaper/"+p.data.id, { state: JSON.stringify(p.data.res) });
       }
     }
     gettingequetion();
@@ -171,6 +175,7 @@ export default function Generate() {
         >
           {isFetching ? "Generating..." : "Generate"}
         </motion.div>
+        
       </div>
     </>
   );

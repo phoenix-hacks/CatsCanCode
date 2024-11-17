@@ -15,7 +15,7 @@ export default function HowItWorks() {
         <div id="line2"></div>
         <div id="step3">Add Template</div>
         <div id="line3"></div>
-        <div id="step4">Download PDF</div>
+        <div id="step4">Download DOCX</div>
       </div>
     </div>
   );

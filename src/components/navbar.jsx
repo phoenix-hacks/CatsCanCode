@@ -59,7 +59,7 @@ export default function Navbar({ changecurr,curr }) {
           </div>
           <div className="hidden lg:flex lg:flex-1 lg:justify-end ">
             <Link
-              to="#"
+              to="/signin"
               className="text-sm/6 font-semibold text-lightWhite text-opacity-80 border-stroke border-opacity-25 rounded-3xl px-3 py-2 border-[0.1rem]"
             >
               Sign In
